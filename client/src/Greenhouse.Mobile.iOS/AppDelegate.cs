@@ -22,6 +22,7 @@ namespace Greenhouse.Mobile.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             global::Xamarin.Forms.Forms.Init();
+            DIPS.Xamarin.UI.iOS.Library.Initialize();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

@@ -8,7 +8,7 @@ using Android.OS;
 
 namespace Greenhouse.Mobile.Android
 {
-    [Activity(Label = "Greenhouse.Mobile", Theme = "@style/MainTheme", MainLauncher = true,
+    [Activity(Label = "Greenhouse.Mobile", Theme = "@style/MainTheme",
         ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
@@ -19,6 +19,7 @@ namespace Greenhouse.Mobile.Android
 
             base.OnCreate(savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
+            DIPS.Xamarin.UI.Android.Library.Initialize(this);
             LoadApplication(new App());
         }
     }

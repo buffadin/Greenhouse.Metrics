@@ -1,0 +1,37 @@
+<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Greenhouse.Mobile.SplashView"
+             BackgroundColor="{StaticResource PrimaryColor}"
+             x:Name="Root">
+    <Grid HorizontalOptions="Center" VerticalOptions="Center">
+        <!-- Roof -->
+        <Path x:Name="Roof"
+              Fill="#78CE85"
+              Aspect="Uniform"
+              Data="M1.573 309.778h35.1l177.633-172.695L391.7 309.778h34.75L214.306 104.473Z"
+              VerticalOptions="Start"
+              HeightRequest="100" />
+        <!-- Walls -->
+        <Path x:Name="Walls"
+              Fill="#78CE85"
+              Aspect="Uniform"
+              HeightRequest="150"
+              Margin="0,60,0,0"
+              Data="m118.661 229.351-28.477 27.207.009 269.469h248.595V256.558l-27.43-27.207.073 273.12H117.915Z"
+              VerticalOptions="Start" />
+        <!-- Greenhouse text -->
+        <Label x:Name="Text"
+               FontSize="17"
+               Opacity="0"
+               FontAttributes="Bold"
+               TextColor="{StaticResource SecondaryColor}"
+               Text="Greenhouse"
+               HorizontalOptions="Center"
+               VerticalOptions="Start"
+               Margin="0,180,0,0" />
+    </Grid>
+</ContentView>

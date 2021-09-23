@@ -12,6 +12,18 @@ namespace Greenhouse.Mobile
         public MainPage()
         {
             InitializeComponent();
+            DIPS.Xamarin.UI.Library.Initialize();
+        }
+
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            if (SplashView.IsVisible)
+            {
+                await SplashView.Splash();
+                await SplashView.FadeTo(0,750);
+                SplashView.IsVisible = false;
+            }
         }
     }
 }

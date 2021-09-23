@@ -4,11 +4,8 @@
              xmlns:local="clr-namespace:Greenhouse.Mobile"
              x:Class="Greenhouse.Mobile.MainPage">
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Label Text="Welcome to Xamarin.Forms!" 
-           HorizontalOptions="Center"
-           VerticalOptions="CenterAndExpand" />
-    </StackLayout>
+    <Grid>
+        <local:SplashView x:Name="SplashView"/>
+    </Grid>
 
 </ContentPage>
