@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Windows.Input;
 using DIPS.Xamarin.UI.Extensions;
+using Microsoft.AspNetCore.SignalR.Client;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
@@ -11,17 +12,16 @@ namespace Greenhouse.Mobile
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly HttpClient _httpClient;
-        private bool _isTestingServerConnection;
-        private string _testingServerConnectionErrorMessage;
-        private bool _canConnectToServer;
+        private bool _isConnectedToServer;
+        private bool _isConnectingToServer;
+        private string _serverConnectionErrorMessage;
+        private HubConnection _singleRHubConnection;
 
         public MainViewModel()
         {
-            TestServerConnectionCommand = new Command(TestServerConnection);
-            var httpHandler = new HttpClientHandler();
-            //Skip server cert, who cares?
-            httpHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
-            _httpClient = new HttpClient(httpHandler);
+            ConnectToServerCommand = new Command(ConnectToServer);
+            _httpClient = new HttpClient(new HttpClientHandler
+                {ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true});
         }
 
         public string ServerAddress
@@ -29,57 +29,76 @@ namespace Greenhouse.Mobile
             get => Preferences.Get("ServerAddress", "");
             set
             {
-                Preferences.Set("ServerAddress",value);
+                Preferences.Set("ServerAddress", value);
                 PropertyChanged.Raise();
             }
         }
 
-        public string TestingServerConnectionErrorMessage
+        public string ServerConnectionErrorMessage
         {
-            get => _testingServerConnectionErrorMessage;
-            set => PropertyChanged.RaiseWhenSet(ref _testingServerConnectionErrorMessage, value);
+            get => _serverConnectionErrorMessage;
+            set => PropertyChanged.RaiseWhenSet(ref _serverConnectionErrorMessage, value);
         }
 
-        public bool IsTestingServerConnection
+        public bool IsConnectingToServer
         {
-            get => _isTestingServerConnection;
-            set => PropertyChanged.RaiseWhenSet(ref _isTestingServerConnection, value);
+            get => _isConnectingToServer;
+            set => PropertyChanged.RaiseWhenSet(ref _isConnectingToServer, value);
         }
 
-        public ICommand TestServerConnectionCommand { get; }
+        public ICommand ConnectToServerCommand { get; }
+
+        public bool IsConnectedToServer
+        {
+            get => _isConnectedToServer;
+            set => PropertyChanged.RaiseWhenSet(ref _isConnectedToServer, value);
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void TestServerConnection()
+        private async void ConnectToServer()
         {
             try
             {
-                IsTestingServerConnection = true;
-                CanConnectToServer = false;
-                TestingServerConnectionErrorMessage = null;
-                var response = await _httpClient.GetAsync(ServerAddress + "/status/ping");
-                if (response.IsSuccessStatusCode)
+                IsConnectingToServer = true;
+                IsConnectedToServer = false;
+                ServerConnectionErrorMessage = null;
+                var response = await _httpClient.GetAsync($"{ServerAddress}/status/ping");
+                if (_singleRHubConnection != null) await _singleRHubConnection.StopAsync();
+                _singleRHubConnection = new HubConnectionBuilder()
+                    .WithUrl($"{ServerAddress}/MetricsHub",
+                        options => options.HttpMessageHandlerFactory = x => new HttpClientHandler
+                            {ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true})
+                    .Build();
+                await _singleRHubConnection.StartAsync();
+                switch (response.IsSuccessStatusCode)
                 {
-                    CanConnectToServer = true;
-                }
-                else
-                {
-                    TestingServerConnectionErrorMessage = response.ReasonPhrase;
+                    case true when _singleRHubConnection.State == HubConnectionState.Connected:
+                        _singleRHubConnection.On<string>("ReceiveMetrics", OnMetricsChanged);
+                        IsConnectedToServer = true;
+                        break;
+                    case false:
+                        ServerConnectionErrorMessage = response.ReasonPhrase;
+                        break;
                 }
             }
             catch (Exception exception)
             {
-                TestingServerConnectionErrorMessage = exception.Message;
+                ServerConnectionErrorMessage = exception.Message;
             }
             finally
             {
-                IsTestingServerConnection = false;
+                IsConnectingToServer = false;
             }
         }
 
-        public bool CanConnectToServer
+        private void OnMetricsChanged(string obj)
         {
-            get => _canConnectToServer;
-            set => PropertyChanged.RaiseWhenSet(ref _canConnectToServer, value);
+        }
+
+        public void Initialize()
+        {
+            ConnectToServer();
         }
     }
 }

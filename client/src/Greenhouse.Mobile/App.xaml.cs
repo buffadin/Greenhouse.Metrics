@@ -14,11 +14,18 @@ namespace Greenhouse.Mobile
 
             MainPage = new MainPage();
             
+            var resource = Resources["MainViewModel"];
+            if (resource is MainViewModel mainViewModel)
+            {
+                MainViewModel = mainViewModel;
+            }
         }
+
+        public MainViewModel MainViewModel { get; }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            MainViewModel.Initialize();
         }
 
         protected override void OnSleep()
