@@ -13,9 +13,4 @@ namespace Greenhouse.Server.Hubs
             Console.WriteLine("Metrics changed from SingleR hub");
         }
     }
-
-    public interface IMetricsClient
-    {
-        Task ReceiveMetrics(string data);
-    }
 }

@@ -11,20 +11,19 @@ namespace Greenhouse.Server.Watchers
     {
         private readonly IHubContext<MetricsHub, IMetricsClient> _hubContext;
 
+        private Timer _timer;
+
         public MetricsWatcher(IHubContext<MetricsHub, IMetricsClient> hubContext)
         {
             _hubContext = hubContext;
         }
-        
-        private Timer _timer;
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(CheckMetrics, null, TimeSpan.Zero, 
+            _timer = new Timer(CheckMetrics, null, TimeSpan.Zero,
                 TimeSpan.FromSeconds(5));
             return Task.CompletedTask;
         }
-
         private async void CheckMetrics(object? state)
         {
             Console.WriteLine("Fetching metrics");

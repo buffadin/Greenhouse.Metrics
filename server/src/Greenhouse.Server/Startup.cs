@@ -36,6 +36,8 @@ namespace Greenhouse.Server
                 app.UseHttpsRedirection();
             }   
 
+            //ArduinoConnector is excluded due to missing dependencies
+            // ArduinoConnector.Initialize();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {
