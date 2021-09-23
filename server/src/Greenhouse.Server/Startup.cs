@@ -25,7 +25,7 @@ namespace Greenhouse.Server
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            ArduinoConnector.Initialize();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
