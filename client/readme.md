@@ -1,4 +1,4 @@
 
-![Greenhouse](./design/greenhouse.png)
+![Greenhouse](./design/Greenhouse.png)
 
 ## Greenhouse Mobile
