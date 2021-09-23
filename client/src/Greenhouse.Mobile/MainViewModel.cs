@@ -11,13 +11,13 @@ namespace Greenhouse.Mobile
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly HttpClient _httpClient;
-        private bool _isTestingServerAddress;
-        private string _testingServerAddressErrorMessage;
+        private bool _isTestingServerConnection;
+        private string _testingServerConnectionErrorMessage;
         private bool _canConnectToServer;
 
         public MainViewModel()
         {
-            ServerAddressAddedCommand = new Command(ServerAddressAdded);
+            TestServerConnectionCommand = new Command(TestServerConnection);
             var httpHandler = new HttpClientHandler();
             //Skip server cert, who cares?
             httpHandler.ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true;
@@ -34,28 +34,28 @@ namespace Greenhouse.Mobile
             }
         }
 
-        public string TestingServerAddressErrorMessage
+        public string TestingServerConnectionErrorMessage
         {
-            get => _testingServerAddressErrorMessage;
-            set => PropertyChanged.RaiseWhenSet(ref _testingServerAddressErrorMessage, value);
+            get => _testingServerConnectionErrorMessage;
+            set => PropertyChanged.RaiseWhenSet(ref _testingServerConnectionErrorMessage, value);
         }
 
-        public bool IsTestingServerAddress
+        public bool IsTestingServerConnection
         {
-            get => _isTestingServerAddress;
-            set => PropertyChanged.RaiseWhenSet(ref _isTestingServerAddress, value);
+            get => _isTestingServerConnection;
+            set => PropertyChanged.RaiseWhenSet(ref _isTestingServerConnection, value);
         }
 
-        public ICommand ServerAddressAddedCommand { get; }
+        public ICommand TestServerConnectionCommand { get; }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private async void ServerAddressAdded()
+        private async void TestServerConnection()
         {
             try
             {
-                IsTestingServerAddress = true;
+                IsTestingServerConnection = true;
                 CanConnectToServer = false;
-                TestingServerAddressErrorMessage = null;
+                TestingServerConnectionErrorMessage = null;
                 var response = await _httpClient.GetAsync(ServerAddress + "/status/ping");
                 if (response.IsSuccessStatusCode)
                 {
@@ -63,16 +63,16 @@ namespace Greenhouse.Mobile
                 }
                 else
                 {
-                    TestingServerAddressErrorMessage = response.ReasonPhrase;
+                    TestingServerConnectionErrorMessage = response.ReasonPhrase;
                 }
             }
             catch (Exception exception)
             {
-                TestingServerAddressErrorMessage = exception.Message;
+                TestingServerConnectionErrorMessage = exception.Message;
             }
             finally
             {
-                IsTestingServerAddress = false;
+                IsTestingServerConnection = false;
             }
         }
 
