@@ -14,4 +14,19 @@
         <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
         <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="MainView.xaml.cs">
+        <DependentUpon>MainView.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Metrices\Temperature\TemperatureCard.xaml.cs">
+        <DependentUpon>TemperatureCard.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Metrices\Temperature\TemperatureSheet.xaml.cs">
+        <DependentUpon>HumiditySheet.xaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

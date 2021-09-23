@@ -1,0 +1,50 @@
+<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dxui="http://dips.xamarin.ui.com"
+             xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
+             xmlns:temperature="clr-namespace:Greenhouse.Mobile.Metrics.Temperature;assembly=Greenhouse.Mobile"
+             xmlns:humidity="clr-namespace:Greenhouse.Mobile.Metrics.Humidity;assembly=Greenhouse.Mobile"
+             x:Class="Greenhouse.Mobile.MainView"
+             x:Name="Root"
+             Padding="0">
+    <dxui:ModalityLayout OverlayColor="Transparent">
+        <dxui:ModalityLayout.Behaviors>
+            <dxui:SheetBehavior x:Name="HumiditySheet"
+                                IsDraggable="True">
+                <humidity:HumiditySheet />
+            </dxui:SheetBehavior>
+            <dxui:SheetBehavior x:Name="TemperatureSheet"
+                                IsDraggable="True">
+                <temperature:TemperatureSheet />
+            </dxui:SheetBehavior>
+        </dxui:ModalityLayout.Behaviors>
+        <Grid RowDefinitions="Auto, *"
+              RowSpacing="0"
+              Padding="15,0,15,15">
+            <Label Grid.Row="0"
+                   Text="Greenhouse"
+                   FontSize="40"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   Margin="0,0,0,15" />
+            <FlexLayout AlignItems="Start"
+                        AlignContent="Start"
+                        Wrap="Wrap"
+                        HorizontalOptions="Start"
+                        Grid.Row="1">
+                <!-- Temperature -->
+                <temperature:TemperatureCard
+                    xct:TouchEffect.Command="{Binding Source={x:Reference TemperatureSheet}, Path=OpenCommand}"
+                    xct:TouchEffect.NativeAnimation="True" />
+                <!-- Humidity -->
+                <humidity:HumidityCard Margin="10,0,0,0"
+                                       xct:TouchEffect.Command="{Binding Source={x:Reference HumiditySheet}, Path=OpenCommand}"
+                                       xct:TouchEffect.NativeAnimation="True" />
+            </FlexLayout>
+        </Grid>
+    </dxui:ModalityLayout>
+</ContentView>

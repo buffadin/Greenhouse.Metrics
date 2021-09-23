@@ -22,6 +22,7 @@ namespace Greenhouse.Mobile
             {
                 await SplashView.Splash();
                 await SplashView.FadeTo(0,750);
+                _ = MainView.FadeTo(1, 750);
                 SplashView.IsVisible = false;
             }
         }
