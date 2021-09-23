@@ -1,9 +1,11 @@
 #include <dht.h>
 #define dht_apin A0 // Analog Pin sensor is connected to
+#define lightsensor_pin A1 // Analog pin sensor for light
  
 dht DHT;
 int val;
-int ledpin=13; 
+int ledpin=13;
+int lightSensorValue;
 
 void setup(){
  
@@ -18,17 +20,22 @@ void loop(){
 
    
     DHT.read11(dht_apin);
-    Serial.print(";");
-    Serial.print("Humidity ");
-    Serial.print(DHT.humidity);
-    Serial.print(" %");
-    Serial.print(";");
-    Serial.print("Temperature-Air ");
-    Serial.print(DHT.temperature); 
-    Serial.print(" C");
-    Serial.println(";");
+    lightSensorValue = analogRead(lightsensor_pin);
     
-    delay(5000);//Wait 5 seconds before accessing sensor again.
- 
- 
+    Serial.print(";");
+    WriteValue("Humidity",DHT.humidity,"%");
+    WriteValue("Temperature-Air",DHT.temperature,"C");
+    WriteValue("Light",lightSensorValue,"Unknown");
+    Serial.println(";");
+    delay(5000);//Wait 5 seconds before accessing sensor again. 
+}
+
+void WriteValue(String name,double value, String unit){
+    Serial.print(name);
+    Serial.print(" ");
+    Serial.print(value);
+    Serial.print(" ");
+    Serial.print(unit);
+    Serial.print(";");
+    return true;
 }
