@@ -1,9 +1,6 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/arduino/Greenhouse.Reciever/bin/Debug/netcoreapp3.1
+﻿/arduino/Greenhouse.Reciever/bin/Debug/netcoreapp3.1
 /arduino/Greenhouse.Reciever/.vs/Greenhouse.Reciever/v16/Server/sqlite3
 /arduino/Greenhouse.Reciever/.vs/Greenhouse.Reciever/v16/.suo
 /arduino/Greenhouse.Reciever/obj/Debug/netcoreapp3.1
 /arduino/Greenhouse.Reciever/obj
+.DS_Store
