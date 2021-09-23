@@ -10,13 +10,14 @@ using Xamarin.Forms.Xaml;
 namespace Greenhouse.Mobile
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainView
+    public partial class SettingsPage : ContentPage
     {
-        public MainView()
+        public SettingsPage()
         {
             InitializeComponent();
         }
 
-        public ICommand OpenSettingsCommand { get; } = new Command(() => Application.Current.MainPage.Navigation.PushModalAsync(new SettingsPage()));
+        public ICommand DoneCommand { get; } =
+            new Command(() => Application.Current.MainPage.Navigation.PopModalAsync());
     }
 }

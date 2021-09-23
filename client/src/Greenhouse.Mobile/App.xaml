@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Application xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mobile="clr-namespace:Greenhouse.Mobile;assembly=Greenhouse.Mobile"
              x:Class="Greenhouse.Mobile.App">
     <Application.Resources>
         <!-- Colors -->
@@ -9,7 +10,6 @@
         
         <Color x:Key="SecondaryColor">#78CE85</Color>
         <x:String x:Key="SecondaryColorString">#78CE85</x:String>
-        
-        
+        <mobile:MainViewModel x:Key="MainViewModel"/>
     </Application.Resources>
 </Application>
