@@ -1,9 +1,0 @@
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-                     xmlns:sheet="http://dips.xamarin.ui.com"
-                     x:Class="Greenhouse.Mobile.Metrics.Humidity.HumiditySheet"
-                     >
-    <Label Text="Hello, world!"
-           VerticalOptions="CenterAndExpand"
-           HorizontalOptions="CenterAndExpand" />
-</ContentView>

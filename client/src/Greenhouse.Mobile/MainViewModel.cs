@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Net.Http;
@@ -20,6 +21,8 @@ namespace Greenhouse.Mobile
         private bool _isConnectedToServer;
         private bool _isConnectingToServer;
         private string _serverConnectionErrorMessage;
+        private bool _isMetricDetailsOpen;
+        private MetricViewModel _currentMetric;
 
         public HubConnection HubConnection { get; set; }
         public List<MetricViewModel> Metrics { get; }
@@ -27,6 +30,11 @@ namespace Greenhouse.Mobile
         public MainViewModel()
         {
             ConnectToServerCommand = new Command(ConnectToServer);
+            OpenMetricDetailsCommand = new Command<MetricViewModel>(m =>
+            {
+                CurrentMetric = m;
+                IsMetricDetailsOpen = true;
+            });
             _httpClient = new HttpClient(new HttpClientHandler
                 {ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true});
             Metrics = new List<MetricViewModel>()
@@ -67,6 +75,23 @@ namespace Greenhouse.Mobile
         {
             get => _isConnectedToServer;
             set => PropertyChanged.RaiseWhenSet(ref _isConnectedToServer, value);
+        }
+
+        public ICommand OpenMetricDetailsCommand
+        {
+            get;
+        }
+
+        public bool IsMetricDetailsOpen
+        {
+            get => _isMetricDetailsOpen;
+            set => PropertyChanged.RaiseWhenSet(ref _isMetricDetailsOpen, value);
+        }
+
+        public MetricViewModel CurrentMetric
+        {
+            get => _currentMetric;
+            set => PropertyChanged.RaiseWhenSet(ref _currentMetric, value);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -144,7 +169,7 @@ namespace Greenhouse.Mobile
                 var metricViewModel = Metrics.FirstOrDefault(m => m.Name == metric.Name);
                 if (metricViewModel != null)
                 {
-                    metricViewModel.Metric = metric;
+                    metricViewModel.CurrentMetric = metric;
                 }
             }
         }
@@ -166,7 +191,8 @@ namespace Greenhouse.Mobile
 
     public class MetricViewModel : INotifyPropertyChanged
     {
-        private Metric _metric;
+        private Metric _currentMetric;
+        private ObservableCollection<Metric> _previousMetrics = new ObservableCollection<Metric>();
         public string Name { get; }
         public MetricType MetricType { get; }
         public string IconName { get; }
@@ -178,10 +204,30 @@ namespace Greenhouse.Mobile
             IconName = iconName;
         }
 
-        public Metric Metric
+        public Metric CurrentMetric
         {
-            get => _metric;
-            set => PropertyChanged.RaiseWhenSet(ref _metric, value);
+            get => _currentMetric;
+            set
+            {
+                PropertyChanged.RaiseWhenSet(ref _currentMetric, value);
+                var previousMetrics = PreviousMetrics;
+                if (_currentMetric != null)
+                {
+                    previousMetrics.Add(_currentMetric);
+                    if (previousMetrics.Count > 20)
+                    {
+                        previousMetrics.Remove(PreviousMetrics.First());
+                    }
+                }
+
+                PreviousMetrics = new ObservableCollection<Metric>(previousMetrics.OrderByDescending(m => m.Timestamp));
+            }
+        }
+
+        public ObservableCollection<Metric> PreviousMetrics
+        {
+            get => _previousMetrics;
+            set => PropertyChanged.RaiseWhenSet(ref _previousMetrics, value);
         }
 
 

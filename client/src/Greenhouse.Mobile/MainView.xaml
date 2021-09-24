@@ -6,28 +6,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:dxui="http://dips.xamarin.ui.com"
              xmlns:xct="http://xamarin.com/schemas/2020/toolkit"
-             xmlns:temperature="clr-namespace:Greenhouse.Mobile.Metrics.Temperature;assembly=Greenhouse.Mobile"
-             xmlns:humidity="clr-namespace:Greenhouse.Mobile.Metrics.Humidity;assembly=Greenhouse.Mobile"
              xmlns:mobile="clr-namespace:Greenhouse.Mobile;assembly=Greenhouse.Mobile"
+             xmlns:metrics="clr-namespace:Greenhouse.Mobile.Metrics;assembly=Greenhouse.Mobile"
              x:Class="Greenhouse.Mobile.MainView"
              x:Name="Root"
              x:DataType="{x:Type mobile:MainViewModel}"
              Padding="0">
     <dxui:ModalityLayout OverlayColor="Transparent">
         <dxui:ModalityLayout.Behaviors>
-            <dxui:SheetBehavior x:Name="HumiditySheet"
-                                IsDraggable="True">
-                <humidity:HumiditySheet />
-            </dxui:SheetBehavior>
-            <dxui:SheetBehavior x:Name="TemperatureSheet"
-                                IsDraggable="True">
-                <temperature:TemperatureSheet />
+            <dxui:SheetBehavior IsOpen="{Binding IsMetricDetailsOpen}"
+                                IsDraggable="True"
+                                Position="0.5"
+                                VerticalContentAlignment="SameAsSheet"
+                                Title="{Binding CurrentMetric.Name}">
+                <mobile:MetricDetailView  />
             </dxui:SheetBehavior>
         </dxui:ModalityLayout.Behaviors>
         <Grid RowDefinitions="Auto, *"
               ColumnDefinitions="*,Auto"
               RowSpacing="0"
               Padding="15,0,15,15">
+            <!-- Header and settings -->
             <Label Grid.Row="0"
                    Grid.Column="0"
                    Text="Greenhouse"
@@ -44,6 +43,7 @@
                   xct:TouchEffect.NativeAnimation="True"
                   xct:TouchEffect.Command="{Binding Source={x:Reference Root}, Path=OpenSettingsCommand, Mode=OneTime}"
                   Data="m22.2 14.4-1.2-.7c-1.3-.8-1.3-2.7 0-3.5l1.2-.7c1-.6 1.3-1.8.7-2.7l-1-1.7c-.6-1-1.8-1.3-2.7-.7l-1.2.7c-1.3.8-3-.2-3-1.7V2c0-1.1-.9-2-2-2h-2C9.9 0 9 .9 9 2v1.3C9 4.8 7.3 5.8 6 5l-1.2-.6c-1-.6-2.2-.2-2.7.7l-1 1.7c-.5 1-.2 2.2.7 2.8l1.2.7c1.3.7 1.3 2.7 0 3.4l-1.2.7c-1 .6-1.3 1.8-.7 2.7l1 1.7c.6 1 1.8 1.3 2.7.7l1.2-.6c1.3-.8 3 .2 3 1.7V22c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2v-1.3c0-1.5 1.7-2.5 3-1.7l1.2.7c1 .6 2.2.2 2.7-.7l1-1.7c.5-1.1.2-2.3-.7-2.9zM12 16c-2.2 0-4-1.8-4-4s1.8-4 4-4 4 1.8 4 4-1.8 4-4 4z" />
+            <!-- Metrics -->
             <FlexLayout AlignItems="Start"
                         AlignContent="Start"
                         Wrap="Wrap"
@@ -67,7 +67,10 @@
                                    HeightRequest="50"
                                    Padding="10"
                                    HorizontalOptions="Start"
-                                   VerticalOptions="Start">
+                                   VerticalOptions="Start"
+                                   xct:TouchEffect.NativeAnimation="True"
+                                   xct:TouchEffect.Command="{Binding Source={RelativeSource AncestorType={x:Type mobile:MainViewModel}}, Path=OpenMetricDetailsCommand, Mode=OneTime}"
+                                   xct:TouchEffect.CommandParameter="{Binding .}">
                                 <Grid RowDefinitions="Auto,*"
                                       ColumnDefinitions="Auto,Auto,*"
                                       ColumnSpacing="0"
@@ -98,10 +101,14 @@
                                            Source="air.png">
                                         <Image.IsVisible>
                                             <MultiBinding Converter="{dxui:LogicalExpressionConverter LogicalGate=Or}">
-                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
-                                                }" ConverterParameter="{x:Static mobile:MetricType.HumidityAir}"/>
-                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
-                                                }" ConverterParameter="{x:Static mobile:MetricType.TemperatureAir}"/>
+                                                <Binding Path="MetricType"
+                                                         Converter="{xct:EqualConverter
+                                                }"
+                                                         ConverterParameter="{x:Static mobile:MetricType.HumidityAir}" />
+                                                <Binding Path="MetricType"
+                                                         Converter="{xct:EqualConverter
+                                                }"
+                                                         ConverterParameter="{x:Static mobile:MetricType.TemperatureAir}" />
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>
@@ -113,10 +120,14 @@
                                            Source="dirt.png">
                                         <Image.IsVisible>
                                             <MultiBinding Converter="{dxui:LogicalExpressionConverter LogicalGate=Or}">
-                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
-                                                }" ConverterParameter="{x:Static mobile:MetricType.TemperatureEarth}"/>
-                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
-                                                }" ConverterParameter="{x:Static mobile:MetricType.HumiditiyEarth}"/>
+                                                <Binding Path="MetricType"
+                                                         Converter="{xct:EqualConverter
+                                                }"
+                                                         ConverterParameter="{x:Static mobile:MetricType.TemperatureEarth}" />
+                                                <Binding Path="MetricType"
+                                                         Converter="{xct:EqualConverter
+                                                }"
+                                                         ConverterParameter="{x:Static mobile:MetricType.HumiditiyEarth}" />
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>
@@ -126,7 +137,7 @@
                                            VerticalOptions="CenterAndExpand"
                                            VerticalTextAlignment="Start"
                                            LineBreakMode="CharacterWrap"
-                                           Text="{Binding Metric.Value}"
+                                           Text="{Binding CurrentMetric.Value}"
                                            TextColor="Black"
                                            FontSize="30"
                                            FontAttributes="Bold" />

@@ -1,0 +1,49 @@
+<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:dxui="http://dips.xamarin.ui.com"
+             xmlns:mobile="clr-namespace:Greenhouse.Mobile;assembly=Greenhouse.Mobile"
+             xmlns:metrics="clr-namespace:Greenhouse.Mobile.Metrics;assembly=Greenhouse.Mobile"
+             x:Class="Greenhouse.Mobile.MetricDetailView"
+             x:Name="Root"
+             x:DataType="{x:Type mobile:MainViewModel}">
+    <CollectionView ItemsSource="{Binding CurrentMetric.PreviousMetrics}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="{x:Type metrics:Metric}">
+                <Grid RowDefinitions="Auto,*, Auto"
+                      ColumnDefinitions="Auto,Auto,*"
+                      Padding="0">
+                    <Label Grid.Row="0"
+                           Margin="5,0,0,0"
+                           Grid.Column="0"
+                           Text="Timestamp"
+                           FontAttributes="Bold" />
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="15,0,0,0"
+                           Text="Value"
+                           FontAttributes="Bold" />
+                    <Label Grid.Column="0"
+                           Grid.Row="1"
+                           Margin="5,0,0,0"
+                           Text="{Binding Timestamp, Converter={dxui:DateAndTimeConverter}}" />
+                    <Label Grid.Column="1"
+                           Grid.Row="1"
+                           Margin="15,0,0,0"
+                           Text="{Binding Value}" />
+                    <Label Grid.Column="2"
+                           Grid.Row="1"
+                           Text="{Binding Unit}" />
+                    <Line HeightRequest="1"
+                          BackgroundColor="LightGray"
+                          Grid.Row="2"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="3" />
+                </Grid>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+</ContentView>
