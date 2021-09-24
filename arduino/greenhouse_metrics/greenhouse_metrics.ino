@@ -1,7 +1,8 @@
+#include <Wire.h>
 #include <SoftwareSerial.h>
-
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <I2CSoilMoistureSensor.h>
 #include <dht.h>
 #define dht_apin A0 // Analog Pin sensor is connected to
 #define lightsensor_pin A1 // Analog pin sensor for light
@@ -22,10 +23,10 @@ const int lightcontroller= 3;
 
 void setup(){
  
-  Serial.begin(9600);
+  Wire.begin();
+  Serial.begin(9600); 
   delay(500);//Delay to let system boot
   sensors.begin();
-  BT.begin(9600);
   pinMode(lightcontroller,OUTPUT);
   delay(1000);//Wait before accessing Sensor
  
@@ -33,27 +34,38 @@ void setup(){
  
 void loop(){
 
-    soilSensorValue=0.0;
-    for (int i = 0; i <= 50; i++) 
-    { 
-      soilSensorValue = soilSensorValue + analogRead(soilsensor_pin); 
-      delay(1); 
-    } 
-    
-    soilSensorValue = AverageValueOverIterations(soilsensor_pin,100); 
+        
+    soilSensorValue =  AverageValueOverIterations(soilsensor_pin,100); 
+    Serial.print(soilSensorValue);
+    if(soilSensorValue > 225 && soilSensorValue<600)
+    {
+      soilSensorValue = map(soilSensorValue,225,600,0.00,100.00); 
+    }
+    else{
+      if(soilSensorValue<225){
+        soilSensorValue =0.00;
+      }
+      if(soilSensorValue>600){
+        soilSensorValue=100.00;
+      }
+    }
     DHT.read11(dht_apin);
     lightSensorValue = AverageValueOverIterations(lightsensor_pin,100); 
     lumen= lightSensorValue * lumenRatio;
     sensors.requestTemperatures();
+    
     Serial.print(";");
-    WriteValue("Humidity",DHT.humidity,"%");
+    
+    WriteValue("Humidity-Air",DHT.humidity,"%");
     WriteValue("Temperature-Air",DHT.temperature,"C");
     WriteValue("Temperature-Earth",sensors.getTempCByIndex(0),"C");
     WriteValue("Light",lumen,"Lumen");
-    WriteValue("Soil",soilSensorValue,"unknown");   
+    WriteValue("Humidity-Earth",soilSensorValue,"unknown");   
     Serial.println(";");  
     if(lumen <100.0){
       digitalWrite(lightcontroller,HIGH);
+      delay(30);
+      digitalWrite(lightcontroller,LOW);
     }
     delay(5000);//Wait 5 seconds before accessing sensor again. 
 }
