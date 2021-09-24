@@ -10,28 +10,28 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="DIPS.Xamarin.UI" Version="9.0.2" />
-        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.10" />
-        <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
+        <PackageReference Include="DIPS.Xamarin.UI" Version="9.0.2"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="5.0.10"/>
+        <PackageReference Include="Xamarin.CommunityToolkit" Version="1.2.0"/>
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="MainView.xaml.cs">
-        <DependentUpon>MainView.xaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Metrices\Temperature\TemperatureCard.xaml.cs">
-        <DependentUpon>TemperatureCard.xaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Metrices\Temperature\TemperatureSheet.xaml.cs">
-        <DependentUpon>HumiditySheet.xaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
-      <Compile Update="Metrics\MetricDetailView.xaml.cs">
-        <DependentUpon>MetricDetailView.xaml</DependentUpon>
-        <SubType>Code</SubType>
-      </Compile>
+        <Compile Update="MainView.xaml.cs">
+            <DependentUpon>MainView.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Metrices\Temperature\TemperatureCard.xaml.cs">
+            <DependentUpon>TemperatureCard.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Metrices\Temperature\TemperatureSheet.xaml.cs">
+            <DependentUpon>HumiditySheet.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+        <Compile Update="Metrics\MetricDetailView.xaml.cs">
+            <DependentUpon>MetricDetailView.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     </ItemGroup>
 </Project>
