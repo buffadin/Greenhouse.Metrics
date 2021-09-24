@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Greenhouse.Server.Hubs
@@ -9,6 +10,6 @@ namespace Greenhouse.Server.Hubs
         /// </summary>
         /// <param name="data">The metrics data</param>
         /// <returns></returns>
-        Task ReceiveMetrics(string data);
+        Task ReceiveMetrics(List<Metric> data);
     }
 }

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Windows.Input;
 using DIPS.Xamarin.UI.Extensions;
+using Greenhouse.Mobile.Metrics;
 using Microsoft.AspNetCore.SignalR.Client;
 using Xamarin.Essentials;
 using Xamarin.Forms;
@@ -74,7 +76,7 @@ namespace Greenhouse.Mobile
                 switch (response.IsSuccessStatusCode)
                 {
                     case true when _singleRHubConnection.State == HubConnectionState.Connected:
-                        _singleRHubConnection.On<string>("ReceiveMetrics", OnMetricsChanged);
+                        _singleRHubConnection.On<List<Metric>>("ReceiveMetrics", OnMetricsChanged);
                         IsConnectedToServer = true;
                         break;
                     case false:
@@ -92,7 +94,7 @@ namespace Greenhouse.Mobile
             }
         }
 
-        private void OnMetricsChanged(string obj)
+        private void OnMetricsChanged(List<Metric> metrics)
         {
         }
 

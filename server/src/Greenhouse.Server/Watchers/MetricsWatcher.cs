@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Greenhouse.Server.Hubs;
@@ -26,8 +27,18 @@ namespace Greenhouse.Server.Watchers
         }
         private async void CheckMetrics(object? state)
         {
-            Console.WriteLine("Fetching metrics");
-            await _hubContext.Clients.All.ReceiveMetrics("SomeData");
+            List<Metric> metrics = new List<Metric>();
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Humidity", Value = GetRandomNumber(20.00, 54.00).ToString(), Unit = "%" });
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Temperature-Air", Value = GetRandomNumber(20.00, 30.00).ToString(), Unit = "C" });
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Temperature-Earth", Value = GetRandomNumber(20.00, 25.00).ToString(), Unit = "C" });
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Light", Value = GetRandomNumber(25.00, 700.00).ToString(), Unit = "Lumen" });
+            await _hubContext.Clients.All.ReceiveMetrics(metrics);
+        }
+        
+        public static double GetRandomNumber(double minimum, double maximum)
+        {
+            Random random = new Random();
+            return random.NextDouble() * (maximum - minimum) + minimum;
         }
     }
 }
