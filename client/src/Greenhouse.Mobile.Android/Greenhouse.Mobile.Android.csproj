@@ -61,6 +61,7 @@
         <None Include="Properties\AndroidManifest.xml" />
     </ItemGroup>
     <ItemGroup>
+        <AndroidResource Include="Resources\drawable\air.png" />
         <AndroidResource Include="Resources\drawable\dirt.png" />
         <AndroidResource Include="Resources\drawable\humidity.png" />
         <AndroidResource Include="Resources\drawable\light.png" />
