@@ -19,7 +19,7 @@
                                 Position="0.5"
                                 VerticalContentAlignment="SameAsSheet"
                                 Title="{Binding CurrentMetric.Name}">
-                <mobile:MetricDetailView  />
+                <metrics:MetricDetailView  />
             </dxui:SheetBehavior>
         </dxui:ModalityLayout.Behaviors>
         <Grid RowDefinitions="Auto, *"
@@ -60,7 +60,7 @@
                                          HorizontalItemSpacing="10" />
                     </CollectionView.ItemsLayout>
                     <CollectionView.ItemTemplate>
-                        <DataTemplate x:DataType="{x:Type mobile:MetricViewModel}">
+                        <DataTemplate x:DataType="{x:Type metrics:MetricViewModel}">
                             <Frame BackgroundColor="White"
                                    CornerRadius="10"
                                    HasShadow="False"
@@ -104,11 +104,11 @@
                                                 <Binding Path="MetricType"
                                                          Converter="{xct:EqualConverter
                                                 }"
-                                                         ConverterParameter="{x:Static mobile:MetricType.HumidityAir}" />
+                                                         ConverterParameter="{x:Static metrics:MetricType.HumidityAir}" />
                                                 <Binding Path="MetricType"
                                                          Converter="{xct:EqualConverter
                                                 }"
-                                                         ConverterParameter="{x:Static mobile:MetricType.TemperatureAir}" />
+                                                         ConverterParameter="{x:Static metrics:MetricType.TemperatureAir}" />
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>
@@ -123,11 +123,11 @@
                                                 <Binding Path="MetricType"
                                                          Converter="{xct:EqualConverter
                                                 }"
-                                                         ConverterParameter="{x:Static mobile:MetricType.TemperatureEarth}" />
+                                                         ConverterParameter="{x:Static metrics:MetricType.TemperatureEarth}" />
                                                 <Binding Path="MetricType"
                                                          Converter="{xct:EqualConverter
                                                 }"
-                                                         ConverterParameter="{x:Static mobile:MetricType.HumiditiyEarth}" />
+                                                         ConverterParameter="{x:Static metrics:MetricType.HumiditiyEarth}" />
                                             </MultiBinding>
                                         </Image.IsVisible>
                                     </Image>

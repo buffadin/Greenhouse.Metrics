@@ -29,7 +29,7 @@
         <DependentUpon>HumiditySheet.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-      <Compile Update="MetricDetailView.xaml.cs">
+      <Compile Update="Metrics\MetricDetailView.xaml.cs">
         <DependentUpon>MetricDetailView.xaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>

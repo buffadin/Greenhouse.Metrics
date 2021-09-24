@@ -7,7 +7,7 @@
              xmlns:dxui="http://dips.xamarin.ui.com"
              xmlns:mobile="clr-namespace:Greenhouse.Mobile;assembly=Greenhouse.Mobile"
              xmlns:metrics="clr-namespace:Greenhouse.Mobile.Metrics;assembly=Greenhouse.Mobile"
-             x:Class="Greenhouse.Mobile.MetricDetailView"
+             x:Class="Greenhouse.Mobile.Metrics.MetricDetailView"
              x:Name="Root"
              x:DataType="{x:Type mobile:MainViewModel}">
     <CollectionView ItemsSource="{Binding CurrentMetric.PreviousMetrics}">
