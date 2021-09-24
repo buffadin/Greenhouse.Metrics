@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
 
@@ -10,24 +11,28 @@ namespace Greenhouse.Server
     {
         private static Timer m_timer;
         static SerialPort sp = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One);
-        public static event EventHandler MetricsUpdated;
         private static List<Metric> m_latestMetrics;
         private static Action<List<Metric>> _metricsChangedAction;
+        private static bool IsLoaded = false;
 
         public static void Initialize(Action<List<Metric>> metricsChangedAction)
         {
             _metricsChangedAction = metricsChangedAction;
-            try
+            if (!IsLoaded)
             {
-                m_latestMetrics = new List<Metric>();
-                sp.DataReceived += new SerialDataReceivedEventHandler(Sp_DataReceived);
-                sp.Open();                
-            }
-            catch (Exception)
-            {
-                m_timer = new Timer(DoWork, null, TimeSpan.Zero,
-            TimeSpan.FromSeconds(5));
+                try
+                {
+                    m_latestMetrics = new List<Metric>();
+                    sp.DataReceived += new SerialDataReceivedEventHandler(Sp_DataReceived);
+                    sp.Open();
+                }
+                catch (Exception)
+                {
+                    m_timer = new Timer(DoWork, null, TimeSpan.Zero,
+                TimeSpan.FromSeconds(5));
 
+                }
+                IsLoaded = true;
             }
         }
 
