@@ -6,17 +6,19 @@ using System.Threading;
 
 namespace Greenhouse.Server
 {
-    public class ArduinoConnector
+    public class ArduinoWatcher
     {
         private static Timer m_timer;
-        // static SerialPort sp = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One);
+        static SerialPort sp = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One);
         public static event EventHandler MetricsUpdated;
+        private static List<Metric> m_latestMetrics;
         public static void Initialize()
         {
             try
             {
-                // sp.DataReceived += new SerialDataReceivedEventHandler(Sp_DataReceived);
-                // sp.Open();
+                m_latestMetrics = new List<Metric>();
+                sp.DataReceived += new SerialDataReceivedEventHandler(Sp_DataReceived);
+                sp.Open();                
             }
             catch (Exception)
             {
@@ -45,35 +47,35 @@ namespace Greenhouse.Server
         }
 
 
-        // private static void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        // {
-        //     List<Metric> metrics = new List<Metric>();
-        //     var value = sp.ReadLine();
-        //     var metricsArray = value.Split(';');
-        //     if (metricsArray.Length == 0)
-        //     {
-        //         return;
-        //     }
-        //     foreach (var metric in metricsArray)
-        //     {
-        //         var metricInformation = metric.Split(' ');
-        //         if (metricInformation.Length != 3)
-        //         {
-        //             continue;
-        //         }
-        //         metrics.Add(new Metric { Timestamp = DateTime.Now, Name = metricInformation[0], Value = metricInformation[1], Unit = metricInformation[2] });
-        //     }
-        //     LatestMetrics = metrics;
-        // }
+        private static void Sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            List<Metric> metrics = new List<Metric>();
+            var value = sp.ReadLine();
+            var metricsArray = value.Split(';');
+            if (metricsArray.Length == 0)
+            {
+                return;
+            }
+            foreach (var metric in metricsArray)
+            {
+                var metricInformation = metric.Split(' ');
+                if (metricInformation.Length != 3)
+                {
+                    continue;
+                }
+                metrics.Add(new Metric { Timestamp = DateTime.Now, Name = metricInformation[0], Value = metricInformation[1], Unit = metricInformation[2] });
+            }
+            LatestMetrics = metrics;
+        }
 
         public static List<Metric> LatestMetrics
         {
             private set
             {
-                LatestMetrics = value;
+                m_latestMetrics = value;
                 OnChanged(value);
             }
-            get { return LatestMetrics; }
+            get { return m_latestMetrics; }
         }
 
 
