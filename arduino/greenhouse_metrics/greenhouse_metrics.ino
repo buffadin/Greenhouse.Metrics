@@ -1,33 +1,73 @@
+#include <SoftwareSerial.h>
+
+#include <OneWire.h>
+#include <DallasTemperature.h>
 #include <dht.h>
 #define dht_apin A0 // Analog Pin sensor is connected to
 #define lightsensor_pin A1 // Analog pin sensor for light
- 
+#define soilsensor_pin A2 // Analog pin sensor for soilsensor
+#define ONE_WIRE_BUS 2
+
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+SoftwareSerial BT(10, 9); // Arduino RX, TX
 dht DHT;
-int val;
 int ledpin=13;
 int lightSensorValue;
+double soilSensorValue;
+double lumenRatio=0.7;
+double lumen;
+const int lightcontroller= 3;
 
 void setup(){
  
   Serial.begin(9600);
   delay(500);//Delay to let system boot
-  pinMode(ledpin,OUTPUT);  
+  sensors.begin();
+  BT.begin(9600);
+  pinMode(lightcontroller,OUTPUT);
   delay(1000);//Wait before accessing Sensor
  
 }
  
 void loop(){
 
-   
-    DHT.read11(dht_apin);
-    lightSensorValue = analogRead(lightsensor_pin);
+    soilSensorValue=0.0;
+    for (int i = 0; i <= 50; i++) 
+    { 
+      soilSensorValue = soilSensorValue + analogRead(soilsensor_pin); 
+      delay(1); 
+    } 
     
+    soilSensorValue = AverageValueOverIterations(soilsensor_pin,100); 
+    DHT.read11(dht_apin);
+    lightSensorValue = AverageValueOverIterations(lightsensor_pin,100); 
+    lumen= lightSensorValue * lumenRatio;
+    sensors.requestTemperatures();
     Serial.print(";");
     WriteValue("Humidity",DHT.humidity,"%");
     WriteValue("Temperature-Air",DHT.temperature,"C");
-    WriteValue("Light",lightSensorValue,"Unknown");
-    Serial.println(";");
+    WriteValue("Temperature-Earth",sensors.getTempCByIndex(0),"C");
+    WriteValue("Light",lumen,"Lumen");
+    WriteValue("Soil",soilSensorValue,"unknown");   
+    Serial.println(";");  
+    if(lumen <100.0){
+      digitalWrite(lightcontroller,HIGH);
+    }
     delay(5000);//Wait 5 seconds before accessing sensor again. 
+}
+
+double AverageValueOverIterations(int pin, double iterations){
+  double value = 0.0;
+  for (int i = 0; i <= iterations; i++) 
+  { 
+    value = value + analogRead(pin); 
+    delay(1); 
+  } 
+  
+  value = value/iterations; 
+  return value;
 }
 
 void WriteValue(String name,double value, String unit){
