@@ -33,7 +33,8 @@ namespace Greenhouse.Mobile
             {
                 new MetricViewModel("Temperature-Air", MetricType.TemperatureAir, "temperature.png"),
                 new MetricViewModel("Temperature-Earth", MetricType.TemperatureEarth, "temperature.png"),
-                new MetricViewModel("Humidity", MetricType.Humidity, "humidity.png"),
+                new MetricViewModel("Humidity-Air", MetricType.HumidityAir, "humidity.png"),
+                new MetricViewModel("Humidity-Earth", MetricType.HumiditiyEarth, "humidity.png"),
                 new MetricViewModel("Light", MetricType.Light, "light.png"),
             };
         }
@@ -77,6 +78,7 @@ namespace Greenhouse.Mobile
                 IsConnectingToServer = true;
                 IsConnectedToServer = false;
                 ServerConnectionErrorMessage = null;
+                await _httpClient.GetAsync($"{ServerAddress}/status/ping");
                 if (HubConnection != null) await HubConnection.StopAsync();
                 HubConnection = new HubConnectionBuilder()
                     .WithUrl($"{ServerAddress}/MetricsHub",
@@ -157,7 +159,8 @@ namespace Greenhouse.Mobile
     {
         TemperatureAir,
         TemperatureEarth,
-        Humidity,
+        HumidityAir,
+        HumiditiyEarth,
         Light
     }
 
