@@ -41,7 +41,8 @@ namespace Greenhouse.Server
             //;Humidity 54.00 %;Temperature-Air 23.00 C;Temperature-Earth 20.50 C;Light 12.60 Lumen;Soil 1029.31 unknown;;
 
             List<Metric> metrics = new List<Metric>();
-            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Humidity", Value = GetRandomNumber(20.00, 54.00).ToString(), Unit = "%" });
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Humidity-Air", Value = GetRandomNumber(20.00, 54.00).ToString(), Unit = "%" });
+            metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Humidity-Earth", Value = GetRandomNumber(20.00, 54.00).ToString(), Unit = "%" });
             metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Temperature-Air", Value = GetRandomNumber(20.00, 30.00).ToString(), Unit = "C" });
             metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Temperature-Earth", Value = GetRandomNumber(20.00, 25.00).ToString(), Unit = "C" });
             metrics.Add(new Metric { Timestamp = DateTime.Now, Name = "Light", Value = GetRandomNumber(25.00, 700.00).ToString(), Unit = "Lumen" });

@@ -65,16 +65,17 @@
                                    CornerRadius="10"
                                    HasShadow="False"
                                    HeightRequest="50"
-                                   Padding="15"
+                                   Padding="10"
                                    HorizontalOptions="Start"
                                    VerticalOptions="Start">
                                 <Grid RowDefinitions="Auto,*"
-                                      ColumnDefinitions="Auto,*"
+                                      ColumnDefinitions="Auto,Auto,*"
+                                      ColumnSpacing="0"
                                       RowSpacing="0">
                                     <Label Text="Current"
                                            Grid.Row="0"
                                            Grid.RowSpan="2"
-                                           Grid.Column="1"
+                                           Grid.Column="2"
                                            FontSize="10"
                                            FontAttributes="Bold"
                                            HorizontalOptions="Start"
@@ -83,7 +84,7 @@
                                            Opacity="0.3" />
                                     <Image Grid.Row="0"
                                            Grid.RowSpan="2"
-                                           Grid.Column="0"
+                                           Grid.Column="1"
                                            HeightRequest="50"
                                            WidthRequest="35"
                                            HorizontalOptions="Start"
@@ -92,19 +93,35 @@
                                     <Image HeightRequest="20"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"
-                                           Margin="-40,0,0,0"
                                            Grid.Row="1"
-                                           Source="air.png"
-                                           IsVisible="{Binding MetricType, Converter={xct:EqualConverter}, ConverterParameter={x:Static mobile:MetricType.TemperatureAir}}" />
+                                           Grid.Column="0"
+                                           Source="air.png">
+                                        <Image.IsVisible>
+                                            <MultiBinding Converter="{dxui:LogicalExpressionConverter LogicalGate=Or}">
+                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
+                                                }" ConverterParameter="{x:Static mobile:MetricType.HumidityAir}"/>
+                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
+                                                }" ConverterParameter="{x:Static mobile:MetricType.TemperatureAir}"/>
+                                            </MultiBinding>
+                                        </Image.IsVisible>
+                                    </Image>
                                     <Image HeightRequest="20"
                                            HorizontalOptions="Center"
                                            VerticalOptions="Center"
-                                           Margin="-40,0,0,0"
                                            Grid.Row="1"
-                                           Source="dirt.png"
-                                           IsVisible="{Binding MetricType, Converter={xct:EqualConverter}, ConverterParameter={x:Static mobile:MetricType.TemperatureEarth}}" />
+                                           Grid.Column="0"
+                                           Source="dirt.png">
+                                        <Image.IsVisible>
+                                            <MultiBinding Converter="{dxui:LogicalExpressionConverter LogicalGate=Or}">
+                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
+                                                }" ConverterParameter="{x:Static mobile:MetricType.TemperatureEarth}"/>
+                                                <Binding Path="MetricType" Converter="{xct:EqualConverter
+                                                }" ConverterParameter="{x:Static mobile:MetricType.HumiditiyEarth}"/>
+                                            </MultiBinding>
+                                        </Image.IsVisible>
+                                    </Image>
                                     <Label Grid.Row="1"
-                                           Grid.Column="1"
+                                           Grid.Column="2"
                                            Margin="0,5,0,0"
                                            VerticalOptions="CenterAndExpand"
                                            VerticalTextAlignment="Start"
