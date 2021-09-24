@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Greenhouse.Server.Hubs;
-using Greenhouse.Server.Watchers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -20,7 +20,6 @@ namespace Greenhouse.Server
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSignalR();
-            services.AddHostedService<MetricsWatcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -34,10 +33,19 @@ namespace Greenhouse.Server
             {
                 // For mobile apps, allow http traffic.
                 app.UseHttpsRedirection();
-            }   
+            }
 
+            app.Use(async (context, func) =>
+            {
+                var metricsHub = context.RequestServices
+                    .GetRequiredService<IHubContext<MetricsHub, IMetricsClient>>();
+                ArduinoWatcher.Initialize(metrics =>
+                    {
+                        metricsHub.Clients.All.ReceiveMetrics(metrics);
+                    }
+                );
+            });
             
-            ArduinoWatcher.Initialize();
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

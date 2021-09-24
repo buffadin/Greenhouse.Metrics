@@ -12,8 +12,11 @@ namespace Greenhouse.Server
         static SerialPort sp = new SerialPort("COM6", 9600, Parity.None, 8, StopBits.One);
         public static event EventHandler MetricsUpdated;
         private static List<Metric> m_latestMetrics;
-        public static void Initialize()
+        private static Action<List<Metric>> _metricsChangedAction;
+
+        public static void Initialize(Action<List<Metric>> metricsChangedAction)
         {
+            _metricsChangedAction = metricsChangedAction;
             try
             {
                 m_latestMetrics = new List<Metric>();
@@ -73,15 +76,9 @@ namespace Greenhouse.Server
             private set
             {
                 m_latestMetrics = value;
-                OnChanged(value);
+                _metricsChangedAction?.Invoke(value);
             }
             get { return m_latestMetrics; }
-        }
-
-
-        protected static void OnChanged(List<Metric> LatestMetrics)
-        {
-            MetricsUpdated?.Invoke(LatestMetrics, EventArgs.Empty);
         }
     }
 }
