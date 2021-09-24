@@ -35,6 +35,13 @@ namespace Greenhouse.Server
                 app.UseHttpsRedirection();
             }
 
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<MetricsHub>("/metricsHub");
+                endpoints.MapGet("/status/ping", async context => { await context.Response.WriteAsync("pong"); });
+            });
+            
             app.Use(async (context, func) =>
             {
                 var metricsHub = context.RequestServices
@@ -44,13 +51,6 @@ namespace Greenhouse.Server
                         metricsHub.Clients.All.ReceiveMetrics(metrics);
                     }
                 );
-            });
-            
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<MetricsHub>("/metricsHub");
-                endpoints.MapGet("/status/ping", async context => { await context.Response.WriteAsync("pong"); });
             });
         }
     }
