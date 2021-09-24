@@ -61,7 +61,11 @@
         <None Include="Properties\AndroidManifest.xml" />
     </ItemGroup>
     <ItemGroup>
+        <AndroidResource Include="Resources\drawable\dirt.png" />
+        <AndroidResource Include="Resources\drawable\humidity.png" />
+        <AndroidResource Include="Resources\drawable\light.png" />
         <AndroidResource Include="Resources\drawable\splash_screen.xml" />
+        <AndroidResource Include="Resources\drawable\temperature.png" />
         <AndroidResource Include="Resources\layout\Tabbar.axml" />
         <AndroidResource Include="Resources\layout\Toolbar.axml" />
         <AndroidResource Include="Resources\values\styles.xml" />

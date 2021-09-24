@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using DIPS.Xamarin.UI.Extensions;
 using Greenhouse.Mobile.Metrics;
@@ -19,11 +21,20 @@ namespace Greenhouse.Mobile
         private string _serverConnectionErrorMessage;
         private HubConnection _singleRHubConnection;
 
+        public List<MetricViewModel> Metrics { get; }
+
         public MainViewModel()
         {
             ConnectToServerCommand = new Command(ConnectToServer);
             _httpClient = new HttpClient(new HttpClientHandler
                 {ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true});
+            Metrics = new List<MetricViewModel>()
+            {
+                new MetricViewModel("Temperature-Air", MetricType.TemperatureAir, "temperature.png"),
+                new MetricViewModel("Temperature-Earth", MetricType.TemperatureEarth, "temperature.png"),
+                new MetricViewModel("Humidity", MetricType.Humidity, "humidity.png"),
+                new MetricViewModel("Light", MetricType.Light, "light.png"),
+            };
         }
 
         public string ServerAddress
@@ -96,11 +107,52 @@ namespace Greenhouse.Mobile
 
         private void OnMetricsChanged(List<Metric> metrics)
         {
+            foreach (var metric in metrics)
+            {
+                var metricViewModel = Metrics.FirstOrDefault(m => m.Name == metric.Name);
+                if (metricViewModel != null)
+                {
+                    metricViewModel.Metric = metric;
+                }
+            }
         }
 
         public void Initialize()
         {
             ConnectToServer();
         }
+    }
+
+    public enum MetricType
+    {
+        TemperatureAir,
+        TemperatureEarth,
+        Humidity,
+        Light
+    }
+
+    public class MetricViewModel : INotifyPropertyChanged
+    {
+        private Metric _metric;
+        public string Name { get; }
+        public MetricType MetricType { get; }
+        public string IconName { get; }
+
+        public MetricViewModel(string name, MetricType metricType, string iconName)
+        {
+            Name = name;
+            MetricType = metricType;
+            IconName = iconName;
+        }
+
+        public Metric Metric
+        {
+            get => _metric;
+            set => PropertyChanged.RaiseWhenSet(ref _metric, value);
+        }
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
     }
 }
