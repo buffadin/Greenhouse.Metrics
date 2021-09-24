@@ -14,7 +14,6 @@
         <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
         <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
         <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-        <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
         <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
         <AndroidHttpClientHandlerType>Xamarin.Android.Net.AndroidClientHandler</AndroidHttpClientHandlerType>
     </PropertyGroup>
@@ -63,6 +62,7 @@
     <ItemGroup>
         <AndroidResource Include="Resources\drawable\air.png" />
         <AndroidResource Include="Resources\drawable\dirt.png" />
+        <AndroidResource Include="Resources\drawable\GreenhouseAppIcon.png" />
         <AndroidResource Include="Resources\drawable\humidity.png" />
         <AndroidResource Include="Resources\drawable\light.png" />
         <AndroidResource Include="Resources\drawable\splash_screen.xml" />
@@ -74,7 +74,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Greenhouse.Mobile\Greenhouse.Mobile.csproj">
-            <Project>{21DF9235-76E5-4DBF-B671-433E1E8C0C09}</Project>
+            <Project>{F24209BC-C133-4BAD-9B16-A9A2FCF92E65}</Project>
             <Name>Greenhouse.Mobile</Name>
         </ProjectReference>
     </ItemGroup>
